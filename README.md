@@ -4,8 +4,8 @@ Single-agent assistant that OCRs an invoice with **Azure AI Document Intelligenc
 
 ## Team
 
-Team DK — **Dat Dang Nguyen** (implementation / integration).  
-_Add additional teammates and roles here if applicable._
+Team DK — **Dat Dang Nguyen and Khanh Huynh** (implementation / integration).  
+
 
 ## Problem and users
 
