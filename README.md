@@ -169,9 +169,7 @@ These are **not** proprietary data; they exist so reviewers can see what the ret
 
 ## Demo video
 
-Upload your 3–5 minute demo to `demo/` (preferred) **or** link an unlisted YouTube/Loom URL here:
-
-- **Demo link**: `REPLACE_ME` (add `demo/demo.mp4` in GitHub or paste your URL)
+(https://www.loom.com/share/30e0d9aa1c9b434eb3b7266c8db71c4e)
 
 ## Repository layout
 
