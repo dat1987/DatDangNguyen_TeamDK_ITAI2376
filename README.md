@@ -106,14 +106,14 @@ python run_agent.py --invoice PATH_TO_INVOICE.pdf
 
 
 ```bash
-python main.py --invoice data/sample_invoices/sample.pdf --thread-id ap-session-1
+python main.py --invoice data/sample_invoices/sample.pdf 
 ```
 
 ## Example usage (what to expect)
 
 > Note: exact OCR fields depend on the invoice layout and model output.
 
-### Example 1 — Standard vendor PDF
+### Example 1 
 
 **Input**
 
@@ -143,7 +143,7 @@ Validation
 - All totals match: line item sum, subtotal, and invoice total are consistent.
 - No tax applied (TotalTax: 0.00 MYR).
 
-### Example 2 — Same thread follow-up question
+### Example 2 
 
 **Input**
 
@@ -183,7 +183,7 @@ Risks/Anomalies:
 Recommended Next Actions:
 - Review the invoice for completeness, especially if your policy requires tax or subtotal fields.
 
-### Example 3 — Extra AP instructions
+### Example 3 
 
 **Input**
 
@@ -235,12 +235,10 @@ These are **not** proprietary data; they exist so reviewers can see what the ret
 
 ## Demo video
 
-<<<<<<< HEAD
+
 (https://www.loom.com/share/30e0d9aa1c9b434eb3b7266c8db71c4e)
 =======
- https://www.loom.com/share/30e0d9aa1c9b434eb3b7266c8db71c4e
 
->>>>>>> 9c0675f (Update project)
 
 ## Repository layout
 
