@@ -4,20 +4,29 @@ Single-agent assistant that OCRs an invoice with **Azure AI Document Intelligenc
 
 ## Team
 
+<<<<<<< HEAD
 Team DK — **Dat Dang Nguyen and Khanh Huynh** (implementation / integration).  
 
+=======
+Team DK — **Dat Dang Nguyen and Khanh Huynh**.  
+>>>>>>> 9c0675f (Update project)
 
 ## Problem and users
 
-Small and midsize finance teams still spend large amounts of time manually transcribing invoices into accounting systems, which is slow and error-prone. This agent targets **accountants, AP clerks, and owners** who need faster first-pass extraction plus lightweight validation and narrative summarization.
+Many organizations, particularly small and medium-sized businesses, rely on manual processes to handle invoices. Employees must review invoices one by one, extract important details such as vendor name, invoice date, total amount, and line items, and then enter this information into accounting systems. This process is repetitive, time-consuming, and highly prone to human error. As businesses grow and the number of invoices increases, these inefficiencies become more significant, leading to delays in financial reporting and increased operational costs.
+The target users of this system include accountants, finance teams, and business owners who regularly process invoices but may not have access to advanced automation tools. These users often spend considerable time performing routine data entry tasks rather than focusing on higher-value financial analysis. Automating invoice processing is important because it reduces manual workload, improves accuracy, and enables businesses to scale more efficiently.
+The proposed Invoice Analysis Agent aims to address this problem by automatically scanning invoices, extracting structured information via OCR, and generating a clear, structured report. By automating both data extraction and analysis, the agent can significantly improve efficiency and reduce errors in invoice processing workflows.
+
 
 ## Option chosen
 
-**Option A: Single AI Agent** (matches the midterm plan; no switch to multi-agent).
+Option A: Single AI Agent for this project. The invoice analysis task follows a relatively linear workflow: receiving an invoice, extracting data, analyzing the information, and generating a report. A single agent is sufficient to handle all these steps effectively. Introducing multiple agents would add unnecessary complexity without significantly improving performance.
+A single-agent design allows for a more streamlined architecture, easier debugging, and faster development. Since the main goal is to demonstrate the integration of deep learning models with reasoning and tool use, a single agent provides a clear, focused implementation that aligns well with the project requirements.
+
 
 ## Architecture
 
-The workflow is intentionally linear: **file → OCR → LLM (ReAct) → tools → report**, with **short-term conversational memory** via a LangGraph checkpointer (thread id).
+The workflow is intentionally linear: **file → OCR → LLM (ReAct) → tools → report**, with **short-term conversational memory** via a LangGraph checkpointer.
 
 ![Architecture diagram](architecture.png)
 
@@ -28,7 +37,7 @@ The workflow is intentionally linear: **file → OCR → LLM (ReAct) → tools �
 - **Azure OpenAI** (chat / reasoning)  
 - **Azure AI Document Intelligence** (`prebuilt-invoice`)  
 - **BM25 lexical retrieval** over markdown policy docs in `data/knowledge/` (RAG)  
-- **Python 3.10+** (developed/tested on **Python 3.11+** recommended)
+- **Python 3.10+** 
 
 ## Installation
 
@@ -73,15 +82,12 @@ Edit `.env` (never commit real keys):
 
 - `AZURE_OPENAI_API_KEY`
 - `AZURE_OPENAI_ENDPOINT` (like `https://YOUR_RESOURCE.openai.azure.com`)
-- `AZURE_OPENAI_CHAT_DEPLOYMENT_NAME` (your chat deployment name)
-- `AZURE_OPENAI_API_VERSION` (default in `.env.example` is usually fine)
+- `AZURE_OPENAI_CHAT_DEPLOYMENT_NAME` 
+- `AZURE_OPENAI_API_VERSION` 
 - `AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT`
 - `AZURE_DOCUMENT_INTELLIGENCE_KEY`
 
-5. **(Optional) Regenerate the architecture image**
 
-```bash
-python scripts/generate_architecture_png.py
 ```
 
 ## How to run the agent
@@ -98,9 +104,6 @@ Equivalent alternate entrypoint:
 python run_agent.py --invoice PATH_TO_INVOICE.pdf
 ```
 
-### Multi-turn memory (optional)
-
-Use the same `--thread-id` across runs to continue a conversation in-process:
 
 ```bash
 python main.py --invoice data/sample_invoices/sample.pdf --thread-id ap-session-1
@@ -115,39 +118,102 @@ python main.py --invoice data/sample_invoices/sample.pdf --thread-id ap-session-
 **Input**
 
 ```bash
-python main.py --invoice data/sample_invoices/contoso_sample.pdf
+python main.py --invoice data/sample_invoices/X00016469670.jpg
 ```
 
-**Output (shape)**
+**Output**
 
-- `Summary` bullets (vendor, invoice id/date, total)
-- `Key Fields` extracted from OCR JSON
-- `Validation` results from the totals tool (PASS/FAIL with reasons)
-- `Policy Notes` only when the policy retriever returns relevant excerpts
+Summary
+- Invoice from "tan chay yee" (OJC MARKETING SDN BHD) to "THE PEAK QUARRY WORKS".
+- Invoice date: 2019-01-15. Invoice ID: PEGIV-1030765.
+- Total amount: 193.00 MYR.
+
+Key Fields
+- Vendor: tan chay yee (OJC MARKETING SDN BHD)
+- Vendor Address: NO 2 & 4, JALAN BAYU 4, BANDAR SERI ALAM, 81750 MASAI, JOHOR
+- Customer: THE PEAK QUARRY WORKS
+- Invoice Date: 2019-01-15
+- Invoice Total: 193.00 MYR
+- Tax: 0.00 MYR
+
+Line Items
+- 1 item: Description "000000111", Quantity 1, Unit Price 193.00 MYR, Amount 193.00 MYR
+
+Validation
+- All totals match: line item sum, subtotal, and invoice total are consistent.
+- No tax applied (TotalTax: 0.00 MYR).
 
 ### Example 2 — Same thread follow-up question
 
 **Input**
 
 ```bash
-python main.py --invoice data/sample_invoices/contoso_sample.pdf --thread-id demo-1 --message "What looks risky for duplicate payment?"
+python main.py --invoice data/sample_invoices/X00016469671.jpg
 ```
 
 **Output (shape)**
 
-- Adds `Risks/Anomalies` style guidance grounded in tool outputs + retrieved policy snippets
+Summary:
+- The invoice was successfully processed and key fields were extracted with high confidence.
+
+Key Fields:
+- Invoice ID: PEGIV-1030531
+- Invoice Date: 2019-01-02
+- Vendor Name: tan chay yee
+- Vendor Address Recipient: OJC MARKETING SDN BHD
+- Vendor Address: NO 2 & 4, JALAN BAYU 4, BANDAR SERI ALAM, 81750 MASAI, JOHOR
+- Invoice Total: 170.00 MYR
+
+Line Items:
+- 1 item:
+  - Description: 000000111
+  - Quantity: 1.0
+  - Unit Price: 170.00 MYR
+  - Amount: 170.00 MYR
+
+Validation:
+- The sum of line item amounts matches the invoice total (170.00 MYR).
+- No discounts applied (0.00 MYR).
+- Not enough additional numeric fields (such as tax or subtotal) present to perform a full validation.
+
+Risks/Anomalies:
+- No tax, subtotal, or additional charges/fields were detected; this limits the scope of validation.
+- All extracted fields are high-confidence, but if you require tax or more detailed breakdowns, this invoice does not provide them.
+
+Recommended Next Actions:
+- Review the invoice for completeness, especially if your policy requires tax or subtotal fields.
 
 ### Example 3 — Extra AP instructions
 
 **Input**
 
 ```bash
-python main.py --invoice ./invoices/INV-2044.png --message "Flag missing tax fields explicitly."
+python main.py --invoice data/sample_invoices/X51005200931.jpgg
 ```
 
 **Output (shape)**
 
-- Same structured report, with explicit callouts if `TotalTax` / tax-related fields are absent
+Summary:
+- The invoice was successfully processed and key fields were extracted with high confidence.
+- There was an issue validating the invoice totals due to a formatting problem in the extracted data.
+
+Key Fields:
+- Vendor: GOGIANT ENGINEERING (M) SDN
+- Vendor Tax ID: 000800689824
+- Vendor Address: JALAN PERMAS 9/5, NO.59, 81750 BANDAR BARU PERMAS JAYA
+- Invoice Date: 2018-02-09
+- Invoice Total: 436.20 MYR
+- Subtotal: 411.50 MYR
+- Total Tax: 24.69 MYR (Tax Rate: 8%)
+- Discount: 0.00 INR (possible currency mismatch, see Risks)
+
+Line Items:
+1. SR CERAMIC CAP (Code: 6783): 5 × 3.50 MYR = 17.50 MYR
+2. S/STEEL 1/2" STREET ELBOW (Code: 2954): 30 × 3.80 MYR = 114.00 MYR
+3. 2.4MM STARWELD RED HEAD TUNGSTEN ROD (Code: 1760): 1 × 55.00 MYR = 55.00 MYR
+4. ESICUT 4" CUTTING DISC (1BOX)-50PCS (Code: 3496): 3 × 33.00 MYR = 99.00 MYR
+5. WELDRO PICKLING GEL 1KG (Code: 2460): 2 × 43.00 MYR = 86.00 MYR
+6. 13.5" WELDING GLOVE - GREEN (GS) (Code: 9428): 4 × 10.00 MYR = 40.00 MYR
 
 ## Knowledge base (RAG sources)
 
@@ -169,7 +235,12 @@ These are **not** proprietary data; they exist so reviewers can see what the ret
 
 ## Demo video
 
+<<<<<<< HEAD
 (https://www.loom.com/share/30e0d9aa1c9b434eb3b7266c8db71c4e)
+=======
+ https://www.loom.com/share/30e0d9aa1c9b434eb3b7266c8db71c4e
+
+>>>>>>> 9c0675f (Update project)
 
 ## Repository layout
 
@@ -183,4 +254,4 @@ These are **not** proprietary data; they exist so reviewers can see what the ret
 
 ## Security note
 
-Never commit `.env` or real API keys. This template uses `.gitignore` to exclude `.env`.
+Never commit `.env` or real API keys. This template uses `.gitignore` to exclude `.env`. 

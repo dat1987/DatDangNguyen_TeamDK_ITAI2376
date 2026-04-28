@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Reflection — Invoice Analysis Agent
 
 ## What worked well
@@ -24,3 +25,31 @@ The project remained on **Option A (single agent)**. The process flow is largely
 - A mini **Streamlit/Gradio interface** for uploads, dual PDF display, and manual editing of extracted data.    
 - **Durable memory** (SQLite checkpointing) along with optional **duplicates filtering** using the processed invoice database.  
 - Enhanced validation: tax jurisdiction logic, purchase order correlation, and intelligent forwarding to manual verification teams based on confidence.
+=======
+# Reflection — Invoice Analysis Agent
+
+## What worked well
+
+- Splitting the system into **OCR (Azure Document Intelligence)**, **reasoning (Azure OpenAI)**, and **tools** made the behavior easy to explain and grade: the LLM has to show its work through tool calls instead of guessing numbers.
+- Using **LangGraph’s `create_react_agent`** gave a clean **ReAct** loop without a lot of custom orchestration code.
+- Adding a **small markdown knowledge base** plus **BM25 retrieval** kept RAG lightweight (no GPU embeddings) while still demonstrating retrieval-augmented grounding.
+
+## What did not work (initially) and how it was handled
+
+- **Dependency conflicts** showed up when overly strict pins mixed incompatible `langchain-*` and `langgraph-*` versions. The fix was to align versions using a resolver-friendly set and record the resolved pins in `requirements.txt`.
+- **Invoice PDFs** are hard to ship in a classroom repo due to size/licensing, so the repo documents how to place samples under `data/sample_invoices/` instead of committing unknown vendor PDFs.
+
+## Biggest technical challenge
+
+The biggest challenge was making the **Document Intelligence JSON** usable for both the LLM and a **deterministic validation tool** without forcing brittle parsing across every possible invoice layout. The approach was to serialize model fields into plain JSON-friendly primitives and keep validation rules conservative (explicit PASS/FAIL with “not enough fields” outcomes).
+
+## Single vs multi-agent
+
+The project stayed on **Option A (single agent)**. The workflow is mostly linear (OCR → validate → summarize), and splitting into multiple agents would add coordination complexity without a clear benefit for the scope.
+
+## What I would build next (another semester)
+
+- A small **Streamlit/Gradio UI** for uploads, side-by-side PDF view, and editable extracted fields.  
+- **Persistent memory** (SQLite checkpointer) plus optional **duplicate detection** against a processed-invoice table.  
+- Stronger validation: tax jurisdiction rules, purchase-order matching, and confidence-based routing to human review queues.
+>>>>>>> 9c0675f (Update project)
