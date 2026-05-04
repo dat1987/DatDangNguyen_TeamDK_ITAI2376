@@ -84,7 +84,7 @@ Edit `.env` (never commit real keys):
 - `AZURE_DOCUMENT_INTELLIGENCE_KEY`
 
 
-```
+
 
 ## How to run the agent
 
