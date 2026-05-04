@@ -25,5 +25,5 @@ The project remained on **Option A (single agent)**. The process flow is largely
 - A mini **Streamlit/Gradio interface** for uploads, dual PDF display, and manual editing of extracted data.    
 - **Durable memory** (SQLite checkpointing) along with optional **duplicates filtering** using the processed invoice database.  
 - Enhanced validation: tax jurisdiction logic, purchase order correlation, and intelligent forwarding to manual verification teams based on confidence.
-=======
+======
 >>>>>>> 9c0675f (Update project)
