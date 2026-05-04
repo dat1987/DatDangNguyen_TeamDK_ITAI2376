@@ -3,8 +3,9 @@
 Single-agent assistant that OCRs an invoice with **Azure AI Document Intelligence**, reasons with **Azure OpenAI**, validates totals with a rules tool, and pulls **policy context via BM25 retrieval (RAG)**—then returns a structured AP-friendly report.
 
 ## Team
-=======
-Team DK — **Dat Dang Nguyen and Khanh Huynh**.  
+
+Team DK — **Dat Dang Nguyen and Khanh Huynh**. 
+We discuss, plan, implement, and test together at almost every step.
 
 
 ## Problem and users
